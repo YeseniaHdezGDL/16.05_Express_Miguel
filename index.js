@@ -49,5 +49,15 @@ usandoXpress.delete('/holi', function(loQuePido, loQueRegreso) {
     }
 }ESTO NO FUNCIONA*/
 
-//la diferencia entre usar .all y .use
+//
+
+/*la diferencia entre usar .all y .use :
+
+In most cases they would work equivalently. The biggest difference is the order in which middleware would be applied:
+
+app.all() attaches to the application's router, so it's used whenever the app.router middleware is reached (which handles all the method routes... GET, POST, etc).
+
+app.use() attaches to the application's main middleware stack, so it's used in the order specified by middleware. eg, if you put it first, it will be the first thing run. If you put it last, (after the router), it usually won't be run at all.
+
+Usually, if you want to do something globally to all routes, app.use() is the better option. Also, it has less chance of future bugs, since express 0.4 will probably drop the implicit router (meaning, the position of the router in middleware will be more important than it is right now, since you technically don't even have to use it right now).*/
 
