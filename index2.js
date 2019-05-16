@@ -1,7 +1,4 @@
-const express = require('express');
-const app = express(); 
-const port = 3000;
-const path = require('path'); 
+
 
 //get, patch y otro método, con tres urls diferentes, con status diferentes y textos en cada status, primer commit
 
@@ -19,6 +16,7 @@ app.listen(port, function () {
 
 //Abajo estamos haciendo un MIDDLEWARE (línea 27-39) que básicamente es hacer algo "en medio" de la función real para un mismo path (/holi)
 
+/*
 app.all('*', (req, res, next) => { //'*' es para indicar que cuando se haga una req siempre se haga esto, como una función global
     console.log('Esta persona buscó esto en: ', req.path); //estos datos se imprimen en consola para, por ejemplo, conocer las acciones (búsquedas, preferencias etc) que realizas
     next(); //con esta línea estamos indicando que pase a realizar lo siguiente terminado el console
@@ -42,3 +40,43 @@ app.get('/salebye', (req, res) => {
 app.listen(port, function () {
     console.log('Este servidor corre bien en: ' + port);
 });
+*/
+
+//Lo de abajo es para agregar elementos a un arreglo llamado librería
+//recordar que cuando haces cosas en el body, van a ser peticiones POST porque se está agragando info
+//cuando es GET no se hace nada el body
+//ya listo el código, ponerlo a correr en consola y abrir postman
+//en postman picarle a cookies y añadir una a localhost add
+//quitar primera parte y poner foo=bar; add cookie
+//abajo de post, ir al body (después de headers) en barra horizontal
+//desde ahí añadir {"libro":"Los miserables", "autor":"Victor Hugo"}
+//si todo bien, aparecerá "el libro a sido añadido"
+
+
+const express = require('express');
+const app = express(); 
+const port = 3000;
+
+const parseadorCuerpo = require('body-parser'); //middleware
+const parseadorCookies = require ('cookie-parser'); //middleware
+
+let libreria = [];
+
+app.use(parseadorCuerpo.json()); //como son middlewares, se ponen como .use
+app.use(parseadorCookies());
+
+app.post('/libritos', (req, res) => {
+    console.log(req.body); //{"libro":"Los miserables", "autor":"Victor Hugo"}
+    console.log(req.cookies); //imprime la cookie que agregamos: foo=bar.
+    if (req.body.libro && req.body.autor) {
+        libreria.push(req.body);
+        res.status(200).send("El libro ha sido añadido.");
+    } else {
+        res.status(400).send({error: "Tienes que poner un libro y un autor."})
+    }
+});
+
+app.listen(port, function () {
+    console.log('Este servidor corre bien en: ' + port);
+});
+
