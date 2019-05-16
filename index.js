@@ -1,15 +1,16 @@
 const express = require('express');
 const usandoXpress = express(); //lo normal es que se use la palabra 'app' en vez de 'usandoXpress'.
 const puerto = 3000;
-const elCamino = require('path');
+const elCamino = require('path'); //como en node
 
 usandoXpress.all('/holi', (loQuePido, loQueRegreso) => loQueRegreso.send('Que pedo banda'));  
 usandoXpress.all('/bye', (loQuePido, loQueRegreso) => loQueRegreso.send('Adios pues!'));
-usandoXpress.use('/lainfo', express.static(elCamino.join(__dirname, 'lainfo'))); 
+usandoXpress.use('/lainfo', express.static(elCamino.join(__dirname, 'lainfo'))); //para mostrar archivos/folders estáticos
 
 usandoXpress.listen(puerto, function () {
   console.log('Este servidor corre bien en: ' + puerto);
 });
+
 
 //http://localhost:3000/lainfo/lainfo.txt así se accede
 
@@ -47,4 +48,6 @@ usandoXpress.delete('/holi', function(loQuePido, loQueRegreso) {
         loQueRegreso.end(respuesta);
     }
 }ESTO NO FUNCIONA*/
+
+//la diferencia entre usar .all y .use
 
