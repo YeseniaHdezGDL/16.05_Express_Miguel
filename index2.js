@@ -40,7 +40,7 @@ app.get('/salebye', (req, res) => {
 app.listen(port, function () {
     console.log('Este servidor corre bien en: ' + port);
 });
-*/
+*/ 
 
 //Lo de abajo es para agregar elementos a un arreglo llamado librería
 //recordar que cuando haces cosas en el body, van a ser peticiones POST porque se está agragando info
@@ -52,7 +52,7 @@ app.listen(port, function () {
 //desde ahí añadir {"libro":"Los miserables", "autor":"Victor Hugo"}
 //si todo bien, aparecerá "el libro a sido añadido"
 
-
+/*tercer commit
 const express = require('express');
 const app = express(); 
 const port = 3000;
@@ -79,4 +79,54 @@ app.post('/libritos', (req, res) => {
 app.listen(port, function () {
     console.log('Este servidor corre bien en: ' + port);
 });
+*/
 
+//falta correrlo correctamente
+
+const express = require('express');
+const llavecita = require('jsonwebtoken'); //recordar que el nombre formal es jwt
+
+const app = express();
+const port = 3000;
+const llavePrivada = 'holagente'
+
+//Para verificar que el usuario existe en base de datos
+app.post('/auth/signin', (req, res) => { 
+    if (req.body.usuario && req.body.contrasena) {
+        res.status(400).send("Se necesita usuario y contraseña")
+};
+
+llavecita.sign({ user: req.body.user, theme: 'black' }, llavePrivada, function(err, token) {
+    if(err) {
+      res.send(500).end();
+    } else {
+      res.status(200).send({token: token})
+    }
+  });
+
+llavecita.verify(req.headers.authorization, llavePrivada, function(err, decoded) {
+    if(err) {
+      res.status(500).end('aqui')
+    } else {
+      console.log(decoded)
+    }
+  });
+
+app.use((req, res, next) => {
+    llavecita.verify(req.headers.authorization, llavePrivada, function(err, decoded) {
+        if (err) {
+            res.status(500).end('Aquí')
+        } else {
+            console.log(decoded)
+            next()
+        }
+    });
+});
+
+app.get('/otrolugar', (req, res) => {
+    res.send("Al otro lado del camino")
+});
+
+app.listen(port, function () {
+    console.log('Este servidor corre bien en: ' + port);
+});
